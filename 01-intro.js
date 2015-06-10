@@ -11,11 +11,11 @@ var greet = function(name) {
 //alias log
 var log = console.log.bind(console);
 
-console.log(greet('Bob'));
+log(greet('Bob'));
 
 // if foo returns bar, you can drop the function body of foo.
 var greet = hi;
-console.log(greet('Sally'));
+log(greet('Sally'));
 
 // The same works when you have more arguments.
 var hiFormal = function(firstName, lastName) {
@@ -26,10 +26,10 @@ var greetFormal = function(firstName, lastName) {
   return hiFormal(firstName, lastName);
 };
 
-console.log(greetFormal("Phil", "Donahue"));
+log(greetFormal("Phil", "Donahue"));
 
 var greetFormal = hiFormal;
-console.log(greetFormal("Phil", "McCracken"));
+log(greetFormal("Phil", "McCracken"));
 
 // So what if you need the arguments in another order?
 var greetFormalRev = function(lastName, firstName) {
@@ -48,7 +48,7 @@ var flip = function(fn) {
 
 //...we can still drop the body
 greetFormalRev = flip(hiFormal);
-console.log(greetFormal('Obama', 'Michelle'));
+log(greetFormal('Obama', 'Michelle'));
 
 
 /*
