@@ -8,14 +8,13 @@ var greet = function(name) {
   return hi(name);
 };
 
-//alias log
-var log = console.log.bind(console);
-
-log(greet('Bob'));
+greet('Bob');
+// => Hi Bob
 
 // if foo returns bar, you can drop the function body of foo.
 var greet = hi;
-log(greet('Sally'));
+greet('Sally');
+// => Hi Sally
 
 // The same works when you have more arguments.
 var hiFormal = function(firstName, lastName) {
@@ -26,29 +25,34 @@ var greetFormal = function(firstName, lastName) {
   return hiFormal(firstName, lastName);
 };
 
-log(greetFormal("Phil", "Donahue"));
+greetFormal("Phil", "Donahue");
+// => Greetings, Phil Donahue
 
 var greetFormal = hiFormal;
-log(greetFormal("Phil", "McCracken"));
+greetFormal("Phil", "McCracken");
+// => Greetings, Phil McCracken
 
 // So what if you need the arguments in another order?
 var greetFormalRev = function(lastName, firstName) {
   return  hiFormal(firstName, lastName);
 };
 
-log(greetFormal('Obama', 'Barack'));
+greetFormalRev('Obama', 'Barack');
+// => Greetings, Barack Obama
 
-// If we write a function that returns a function
-// which calls the passed function with arguments reversed.
+// Lets write a meta-function
 var flip = function(fn) {
+  //that returns a new function
   return function(a, b) {
+    // that calls original function with arguments in opposite order.
     return fn(b, a);
   };
 };
 
-//...we can still drop the body
+//now we can just apply the meta-function to hiFormal
 greetFormalRev = flip(hiFormal);
-log(greetFormal('Obama', 'Michelle'));
+greetFormal('Obama', 'Michelle');
+// => Greetings, Michelle Obama
 
 
 /*

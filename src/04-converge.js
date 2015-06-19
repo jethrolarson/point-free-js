@@ -19,7 +19,7 @@ var set = function(k){
 includeAges = map(function(person) {
   return set('age')(getAge(person), person);
 });
-// Now we have both arguments of `set` getting p, though one is transformed
+// Now we have both arguments of `set` getting `person`, though one is transformed
 // by getAge. To drop person we'll need a function that can split one argument
 // into 2 and transform them.
 
@@ -30,7 +30,7 @@ var converge = function(final, transform1, transform2) {
     return final(transform1(x), transform2(x));
   };
 };
-// converge(baz, foo, bar)(x) === baz(foo(x), bar(d))
+// converge(baz, foo, bar)(x) === baz(foo(x), bar(x))
 // Basically it splits our argument into 2 by applying it to separate
 // transform functions, then passing those results to the first function
 
@@ -46,6 +46,9 @@ var identity = function (a) {
   return a;
 };
 
-includeAges = map(converge(set('age'), getAge, identity));
+includeAges = map(
+    converge(set('age'), getAge, identity)
+);
 
-log(includeAges(people));
+includeAges(people);
+

@@ -1,0 +1,19 @@
+{
+  "name": "point-free-js",
+  "version": "0.0.1",
+  "description": "Lesson on tacit/point-free js",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/jethrolarson/point-free-js.git"
+  },
+  "author": "Jethro Larson",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/jethrolarson/point-free-js/issues"
+  },
+  "homepage": "https://github.com/jethrolarson/point-free-js"
+}

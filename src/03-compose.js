@@ -18,7 +18,7 @@ function getAges(ar){
 // Glancing at this it's hard to tell what is date logic and what is
 // dealing with the iteration.
 
-console.log(getAges(people));
+getAges(people);
 // It works fine, but it's not easy to reuse or edit.
 
 // Lets see how we'd do that more functionally
@@ -35,30 +35,33 @@ var calculateAge = function(birthday) {
 };
 
 
-var getAges = map(function(p) {
-  return calculateAge(prop('dob')(p));
+var getAges = map(function(person) {
+  return calculateAge(prop('dob')(person));
 });
 
-// We couldn't drop p because we have to pass the result of prop('dob') to
-// calculateAge. To ditch it we need a way to join prop('dob') and
+// We couldn't drop `person` because we have to pass the result of `prop('dob')`` to
+// calculateAge. To ditch it we need a way to join `prop('dob')` and
 // calculateAge so that we can pipe arbitrary objects into them.
 
 // Compose
 //----------
+// Compose takes two functions
 var compose = function(f, g) {
+  // and returns a new one
   return function(x) {
+    // that calls them with it's arguments
     return f(g(x));
   };
 };
-// compose(f, g)(1) == f(g(1));
+// i.e. compose(f, g)(1) == f(g(1));
 
-
+// So lets use compose on our getAge
 var getAge = function(person){
-  return compose(
-    calculateAge,
-    prop('dob')
-  )(person);
+  return compose(calculateAge, prop('dob'))(person);
 };
+
+// That puts `person` in the final call position so...
+
 
 //Drop the inner function!
 var getAge = compose(
@@ -66,7 +69,8 @@ var getAge = compose(
   prop('dob')
 );
 
+// getAges :: [Person] -> [Number]
 var getAges = map(getAge);
 
-log(getAges(people));
+getAges(people);
 //still get the same answer
