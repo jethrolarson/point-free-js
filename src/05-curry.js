@@ -1,11 +1,16 @@
+R = require('ramda');
+var lesson3 = require('./03-compose');
+var getAge = lesson3.getAge;
+var getAges = lesson3.getAges;
 
 // Get people ages multiplied by 2
 
 //Start with naive FP approach
 var getDoubledAges = function(people){
-  return map(function(age){
+  var ages = getAges(people);
+  R.map(function(age){
     return age * 2;
-  })(getAges(people));
+  })(ages);
 };
 // in the innermost function you can see there's only one operation, so lets
 // create a function that can do it.
@@ -20,12 +25,13 @@ var multiply = function(a){
 var multiply = function(a, b){
   return a * b;
 };
+// and who wants to have to call functions in butt format: multiply(1)(2)
 
 // Fortunately a number of libraries are popping up now with auto-curry.
 // My favorite of which is Ramda.
 var R = require('ramda');
 
-// This flavor of curry takes a function and returns one that will call the
+// This flavor of curry(Kyurie) takes a function and returns one that will call the
 // passed function once it has all its arguments. The implementation is a
 // little complex to step through the way I've done with other functions so
 // you'll have to take this on faith.
@@ -33,24 +39,24 @@ var R = require('ramda');
 var multiply = R.curry(multiply);
 
 // Now these are the same.
-multiply(2)(3) === multply(2, 3)
+console.log(multiply(2)(3) === multiply(2, 3));
 
 //Back to our original challenge, we're doubling some ages.
 var getDoubledAges = function(people){
-  return map(multiply(2))(getAges(people));
+  return R.map(multiply(2))(getAges(people));
 };
 
 //To eliminate "people" we have to unnest the functions using compose
 var getDoubledAges = function(people){
-  return compose(
-    map(multiply(2)),
+  return R.compose(
+    R.map(multiply(2)),
     getAges
   )(people);
 };
 
 // kill the inner function!
-var getDoubledAges = compose(
-  map(multiply(2)),
+var getDoubledAges = R.compose(
+  R.map(multiply(2)),
   getAges
 );
 
@@ -60,10 +66,11 @@ var getDoubledAges = compose(
 // this super easilly.
 
 // [Person] -> [Number]
-var getDoubledAges = map(
-  compose(multiply(2), getAge)
+var getDoubledAges = R.map(
+  R.compose(multiply(2), getAge)
 );
-
+var people = require('./people');
+console.log(getDoubledAges(people));
 // Double nice!
 
 // With the power of R.curry we can create functions for >, <, ==, -, filter, head,
@@ -73,8 +80,23 @@ var getDoubledAges = map(
 // so we can fast-forward a bit.
 
 
-// Get people over 50
+// Get people over 60
+var getPeopleOver60 = R.filter(function(person){
+  return getAge(person) > 60
+});
+
+var getPeopleOver60 = R.filter(function(person){
+  return R.gt((getAge(person), 60));
+});
+
+var getPeopleOver60 = R.filter(function(person){
+  return R.compose(R.flip(R.gt)(60), getAge)(person);
+});
+
 // [Person] -> [Person]
-var getPeopleOver50 = R.filter(
-  compose(R.gt(50), getAge)
-);
+var getPeopleOver60 = R.filter(R.compose(R.gt(R.__, 60), getAge));
+
+console.log(getPeopleOver60(people));
+
+//can't see everyone in the terminal so just give me the first names
+console.log(R.map(R.prop('first'), getPeopleOver60(people)));

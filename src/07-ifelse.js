@@ -1,3 +1,9 @@
+//TODO rewrite this to be more interesting
+var R = require('ramda');
+var hasPiercing = R.has('piercing');
+var hasShades = R.has('shades');
+var hasHat = R.has('hat');
+
 function isStewieCool(stewie){
     var out;
     if(hasHat(stewie)){

@@ -1,12 +1,18 @@
+var lesson3 = require('./03-compose');
+var R = require('ramda');
+var getAge = lesson3.getAge;
+
 // Now suppose you wanted to instead just calculate the ages and augment the
 // existing person objects with them. If you were doing this the normal way
 // you'd be starting from scratch now, or figuring out some way to refactor.
 
-var includeAges = map(function(p){
+var includeAges = R.map(function(p){
   p.age = getAge(p);
   return p;
 });
 
+// set
+//--------
 //lets encapsulate the assignment
 //FP purists may want to look away, we're mutating the object
 var set = function(k){
@@ -16,7 +22,7 @@ var set = function(k){
   };
 };
 
-includeAges = map(function(person) {
+includeAges = R.map(function(person) {
   return set('age')(getAge(person), person);
 });
 // Now we have both arguments of `set` getting `person`, though one is transformed
@@ -35,8 +41,8 @@ var converge = function(final, transform1, transform2) {
 // transform functions, then passing those results to the first function
 
 /*
-includeAges = map((p) {
-  return converge(set('age'), getAge, p?));
+includeAges = map((person) {
+  return converge(set('age'), getAge, person?));
 };
 */
 // Hm, p isn't a function
@@ -46,9 +52,11 @@ var identity = function (a) {
   return a;
 };
 
-includeAges = map(
-    converge(set('age'), getAge, identity)
-);
+includeAges = R.map(function(person){
+    return converge(set('age'), getAge, identity)(person);
+});
 
-includeAges(people);
+//:: [Person] -> [Person]
+includeAges = R.map(converge(set('age'), getAge, identity));
 
+console.log(includeAges(require('./people')));

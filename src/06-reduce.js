@@ -1,21 +1,34 @@
+var R = require('ramda');
+var lesson3 = require('./03-compose');
+var getAge = lesson3.getAge;
+var getAges = lesson3.getAges;
 
 // Lets try to sum the ages of our people.
 
 // Easilly done with reduce
-var reduce = curry(function(fn, start, ar){
-  return ar.reduce(fn, start);
+var reduce = R.curry(function(fn, start, ar){
+  var out = start;
+  for(var i = 0, len = ar.length; i < len; i++){
+    out = fn(out, ar[i]);
+  }
+  return out;
 });
 
-var sum = reduce(add, 0);
+var sum = reduce(R.add, 0);
+var product = reduce(R.multiply, 1);
 
 //We can just compose with our previous query function.
-var sumAges = compose(sum, getAges);
+var sumAges = R.compose(sum, getAges);
 
 // Unfortunately that will do two loops over the array. If we want to drop that
 // to 1 we'll have to push the getAge into the reduce.
 
-sumAges = reduce(function(acc, p) {
-  return add(acc, getAge(p));
+sumAges = reduce(function(acc, person) {
+  return R.add(acc, getAge(person));
+}, 0);
+
+sumAges = reduce(function(acc, person) {
+  return R.compose(R.add(acc), getAge)(person); //not helping, still can't get acc out
 }, 0);
 
 // We can't use converge to get rid of the argument because reduce's function
@@ -31,15 +44,19 @@ var useWith = function(final, fn1, fn2){
 
 
 sumAges = reduce(
-  useWith(
-    add,
-    identity, //grab accumulator directly
-    getAge //pass p to getAge
-  ),
-  0
+  function(acc, person) {
+    return useWith(
+      R.add,
+      R.identity, //grab accumulator directly
+      getAge //pass p to getAge
+    )(acc, person);
+  }, 0
 );
 
-log(sumAges(people));
+sumAges = reduce(useWith(R.add, R.identity,getAge), 0);
+
+var people = require('./people');
+console.log(sumAges(people));
 
 
 ///////////////////////////////////
@@ -52,34 +69,6 @@ var divide = function(a, b) {
 };
 
 // [Person] -> Number
-getAverageAge = converge(divide, sumAges , prop('length'));
+getAverageAge = R.converge(divide, sumAges , R.prop('length'));
 
-log(getAverageAge(people));
-
-//TODO figure out this react case a little more.
-
-// If we're using react for templating we can do some cool stuff.
-D = require('react').DOM;
-var applyWidgets = R.evolve({
-  title: R.compose(translate, R.partial(D.b, {classname: 'title'})),
-  dob: R.partial(D.date, {})
-});
-log(applyWidgets(people));
-
-
-var personLayout = D.div({},[
-  D.h2({},[
-    prop('title'),
-    prop('firstname'),
-    prop('lastname')
-  ]),
-  prop('dob'),
-  getAge
-]);
-
-render = R.compose(
-  R.join(''),
-  R.map(
-
-  )
-)
+console.log(getAverageAge(people));

@@ -1,6 +1,8 @@
-
+var people = require('./people');
+var R = require('ramda');
+var map = R.map;
+var prop = R.prop;
 //What if we want to get a list of their ages?
-
 
 //You probably used to seeing code like this
 function getAges(ar){
@@ -18,7 +20,7 @@ function getAges(ar){
 // Glancing at this it's hard to tell what is date logic and what is
 // dealing with the iteration.
 
-getAges(people);
+console.log(getAges(people));
 // It works fine, but it's not easy to reuse or edit.
 
 // Lets see how we'd do that more functionally
@@ -36,11 +38,14 @@ var calculateAge = function(birthday) {
 
 
 var getAges = map(function(person) {
-  return calculateAge(prop('dob')(person));
+  var dob = prop('dob')(person);
+  return calculateAge(dob);
 });
 
-// We couldn't drop `person` because we have to pass the result of `prop('dob')`` to
-// calculateAge. To ditch it we need a way to join `prop('dob')` and
+console.log(getAges(people));
+
+// We couldn't drop `person` because we have to pass the result of `prop('dob')`
+// to calculateAge. To ditch it we need a way to join `prop('dob')` and
 // calculateAge so that we can pipe arbitrary objects into them.
 
 // Compose
@@ -72,5 +77,11 @@ var getAge = compose(
 // getAges :: [Person] -> [Number]
 var getAges = map(getAge);
 
-getAges(people);
+console.log(getAges(people));
 //still get the same answer
+
+//We're going to use these functions later so I'll export them here
+module.exports = {
+  getAge: getAge,
+  getAges: getAges
+};

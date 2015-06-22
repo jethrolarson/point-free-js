@@ -1,3 +1,4 @@
+//TODO cut this
 // By the way, you can use everything you just learned on streams.
 // Actually, you can use what we've already *created* with streams
 // because our functions have been written in a reusable fashion.
@@ -14,6 +15,8 @@ var flyd = require('flyd');
 flyd.filter = R.curry(require('flyd-filter'));
 var log = console.log.bind(console);
 
+var votes = require('./people.js');
+
 //  new Stream[Person]
 var vote$ = flyd.stream();
 //
@@ -26,7 +29,7 @@ var vote$ = flyd.stream();
 // [Person] -> Number
 var countObama = R.compose(
     R.sum, // i.e. R.reduce(R.add, 0)
-    R.filter(R.eq('Obama')),
+    R.filter(R.equals('Obama')),
     R.map(R.prop('votesFor'))
 );
 log(countObama(votes));
@@ -44,7 +47,7 @@ R.scan(R.add, 0, [1, 2, 3]);
 // Stream[Person] -> Stream[Number]
 var countObama$ = R.compose(
     flyd.scan(R.add, 0),
-    flyd.filter(R.eq('Obama')),
+    flyd.filter(R.equals('Obama')),
     R.map(R.prop('votesFor'))
 );
 
@@ -60,7 +63,7 @@ var countObama$ = R.compose(
 // So lets rewrite the above with Ramda's functions:
 countObama =  R.compose(
     R.scan(R.add, 0),
-    R.filter(R.eq('Obama')),
+    R.filter(R.equals('Obama')),
     R.map(R.prop('votesFor'))
 );
 //So now countObama can run on any data structure that implements transducers

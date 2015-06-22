@@ -1,32 +1,7 @@
 var log = console.log.bind(console);
 
-//Supose we have an array of people. Maybe this is the result of a ajax request.
-var people = [
-  {
-    first: "Phil",
-    last: "Donahue",
-    prefix: "Mr.",
-    dob: "December 21, 1935"
-  },
-  {
-    first: "Ada",
-    last: "Yonath",
-    prefix: "Prof.",
-    dob: "June, 22 1939"
-  },
-  {
-    first: "Michelle",
-    last: "Obama",
-    prefix: "First Lady",
-    dob: "January 17, 1964"
-  },
-  {
-    first: "Barack",
-    last: "Obama",
-    prefix: "President",
-    dob: "August 4, 1961"
-  }
-];
+//Supose we have an array of people objects:
+var people = require('./people'); //Show this ->
 
 //What if we want to get an array of their last names?
 
@@ -38,8 +13,7 @@ var getLastNames = function(people){
   }
   return lastNames;
 };
-getLastNames(people);
-// => [Donahue, Yonath, Obama, Obama]
+console.log(getLastNames(people));
 
 // One functional way would be to use map
 var getLastNames = function(people) {
@@ -48,8 +22,7 @@ var getLastNames = function(people) {
   });
 };
 // Still works
-getLastNames(people);
-// => [Donahue, Yonath, Obama, Obama]
+console.log(getLastNames(people));
 
 // That's less code but there's a little bit of boilerplate-y duplication here.
 // Let's see if we can drop the inner function like we did before.
@@ -130,6 +103,8 @@ var getLastNames = function(people) {
 // Drop the inner function!
 var getLastNames = map(prop('last'));
 
+console.log(getLastNames(people));
+
 // Isn't that cool? we created a useful function from two meta functions and
 // some static data ('last') without the `function` keyword.
 
@@ -146,4 +121,3 @@ var getLastNames = map(prop('last'));
 // I.e., getLastNames is a function that takes an array of "Person" objects and returns an
 // array of strings. Now I know that 'Person' isn't a proper type, but it can be
 // helpful to pretend that it is.
-
