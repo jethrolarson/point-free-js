@@ -1,10 +1,26 @@
 var gulp = require('gulp');
-var exec = require('gulp-exec');
+var gutil = require('gulp-util');
+var cp = require('child_process');
 var changed = require('gulp-changed');
+var babel = require('gulp-babel');
+var through = require('through2');
+var paths = {
+  src: ['src/**/*.js']
+};
 
-var paths = {src: ['src/**/*.js']};
+//break gulp log
+var cl = console.log;
+console.log = function() {
+  var args = Array.prototype.slice.call(arguments);
+  if (args.length) {
+    if (/^\[.*gulp.*\]$/.test(args[0])) {
+      return;
+    }
+  }
+  return cl.apply(console, args);
+};
 
-gulp.task('test', function(){
+gulp.task('test', function() {
   var options = {
     continueOnError: true, // default = false, true means don't emit error event
     pipeStdout: false, // default = false, true means stdout is written to file.contents
@@ -17,14 +33,31 @@ gulp.task('test', function(){
   };
   gulp.src(paths.src)
     .pipe(changed('build'))
-    .pipe(
-      exec('node <%= file.path %>', options)
-    ).pipe(exec.reporter(reportOptions))
+    .pipe(through.obj(function(file, enc, cb) {
+      if (file.isNull()) {
+        cb(null, file);
+        return;
+      }
+
+      if (file.isStream()) {
+        cb(new gutil.PluginError('auto exec', 'Streaming not supported'));
+        return;
+      }
+      
+      try {
+        console.log(file.relative);
+        cp.spawn('babel-node', [file.path], { stdio: 'inherit' });
+      } catch (e) {
+        console.log(e);
+      }
+      this.push(file);
+      cb();
+    }))
     .pipe(gulp.dest('build'));
 });
 
-gulp.task('default',['test']);
+gulp.task('default', ['test']);
 
 gulp.task('watch', function() {
-    gulp.watch(paths.src, ['test']);
+  gulp.watch(paths.src, ['test']);
 });

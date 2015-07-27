@@ -1,6 +1,6 @@
 // Lets say you have two functions, greet and hi. Greet returns a call to hi
 // with the same argument.
-var hi = function(str){
+var hi = function(str) {
   return "Hi " + str;
 };
 
@@ -8,12 +8,16 @@ var greet = function(name) {
   return hi(name);
 };
 
-greet('Bob');
+console.log(greet('Bob'));
 // => Hi Bob
 
 // if foo returns bar, you can drop the function body of foo.
 var greet = hi;
-greet('Sally');
+
+//I'm lazy so I'll create an alias for console.log
+var l = console.log.bind(console);
+
+l(greet('Sally'));
 // => Hi Sally
 
 // The same works when you have more arguments.
@@ -21,37 +25,38 @@ var hiFormal = function(firstName, lastName) {
   return "Greetings, " + firstName + ' ' + lastName;
 };
 
-var greetFormal = function(firstName, lastName) {
-  return hiFormal(firstName, lastName);
-};
+// I'm lazy so I'll use ES6 arrow functions:
+var hiFormal = (firstName, lastName) =>
+  "Greetings, " + firstName + ' ' + lastName
+// Now I don't have to type out "function" and "return"
 
-greetFormal("Phil", "Donahue");
+// I also won't be bothering with semi-colons. There's really only 2 cases where
+// you need them(which we won't see), and even then you can put them at the
+// begining of the line.
+
+var greetFormal = (firstName, lastName)=> hiFormal(firstName, lastName)
+
+l(greetFormal("Phil", "Donahue"))
 // => Greetings, Phil Donahue
 
-var greetFormal = hiFormal;
-greetFormal("Phil", "McCracken");
+var greetFormal = hiFormal
+l(greetFormal("Phil", "McCracken"))
 // => Greetings, Phil McCracken
 
 // So what if you need the arguments in another order?
-var greetFormalRev = function(lastName, firstName) {
-  return  hiFormal(firstName, lastName);
-};
+var greetFormalRev = (lastName, firstName)=> hiFormal(firstName, lastName)
 
-greetFormalRev('Obama', 'Barack');
+greetFormalRev('Obama', 'Barack')
 // => Greetings, Barack Obama
 
 // Lets write a meta-function
-var flip = function(fn) {
-  //that returns a new function
-  return function(a, b) {
-    // that calls original function with arguments in opposite order.
-    return fn(b, a);
-  };
-};
+var flip = (fn) =>
+  (...args) =>
+    fn(...args.reverse())
 
 //now we can just apply the meta-function to hiFormal
-greetFormalRev = flip(hiFormal);
-greetFormal('Obama', 'Michelle');
+greetFormalRev = flip(hiFormal)
+greetFormalRev('Obama', 'Michelle')
 // => Greetings, Michelle Obama
 
 
