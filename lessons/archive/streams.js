@@ -1,4 +1,5 @@
-//TODO cut this
+// Couldn't reuse on streams cleanly without using transducers so I cut it.
+
 // By the way, you can use everything you just learned on streams.
 // Actually, you can use what we've already *created* with streams
 // because our functions have been written in a reusable fashion.

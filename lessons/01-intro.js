@@ -15,9 +15,9 @@ console.log(greet('Bob'));
 var greet = hi;
 
 //I'm lazy so I'll create an alias for console.log
-var l = console.log.bind(console);
+var log = console.log.bind(console);
 
-l(greet('Sally'));
+log(greet('Sally'));
 // => Hi Sally
 
 // The same works when you have more arguments.
@@ -31,16 +31,16 @@ var hiFormal = (firstName, lastName) =>
 // Now I don't have to type out "function" and "return"
 
 // I also won't be bothering with semi-colons. There's really only 2 cases where
-// you need them(which we won't see), and even then you can put them at the
+// you need them(which won't come up), and even then you can put them at the
 // begining of the line.
 
 var greetFormal = (firstName, lastName)=> hiFormal(firstName, lastName)
 
-l(greetFormal("Phil", "Donahue"))
+log(greetFormal("Phil", "Donahue"))
 // => Greetings, Phil Donahue
 
 var greetFormal = hiFormal
-l(greetFormal("Phil", "McCracken"))
+log(greetFormal("Phil", "McCracken"))
 // => Greetings, Phil McCracken
 
 // So what if you need the arguments in another order?
@@ -51,12 +51,12 @@ greetFormalRev('Obama', 'Barack')
 
 // Lets write a meta-function
 var flip = (fn) =>
-  (...args) =>
-    fn(...args.reverse())
+  (a, b) =>
+    fn(b, a)
 
 //now we can just apply the meta-function to hiFormal
 greetFormalRev = flip(hiFormal)
-greetFormalRev('Obama', 'Michelle')
+log(greetFormalRev('Obama', 'Michelle'))
 // => Greetings, Michelle Obama
 
 
@@ -65,8 +65,7 @@ This is, in essense, what point-free programming is all about;
 Using functional programming techniques to transform and restructure
 arguments so that our functions don't need them anymore.
 
-In this talk we'll dig into several examples where we drop arguments in
-procedural JS and uncover a style of programming you may not have tried
-before. We'll also explore a library that offers higher-order functions
-to make this style of programming easier.
+In this talk we'll create our own functional library from scratch, drop
+arguments in procedural JS and uncover a style of programming you may not
+have tried before.
 */
