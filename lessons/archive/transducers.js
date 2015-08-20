@@ -4,7 +4,7 @@ var {
   B, // compose
   C, // flip
   K  // const
-} = require('../../combinators')
+} = require('../../src/combinators')
 var reduce = fn => acc => list => list.reduce((acc, it)=> fn(acc)(it), acc)
 // appendTo is the identity reducer for arrays
 var appendTo = list => item => list.concat([item])

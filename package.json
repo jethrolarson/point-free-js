@@ -17,10 +17,11 @@
   },
   "homepage": "https://github.com/jethrolarson/point-free-js",
   "devDependencies": {
+    "babel": "^5.8.5",
     "flyd": "~0.1.2",
     "flyd-filter": "~1.0.2",
     "gulp": "~3.5.6",
-    "babel": "^5.8.5",
+    "gulp-babel": "^5.2.0",
     "gulp-changed": "^1.2.1",
     "gulp-util": "^3.0.6",
     "ramda": "0.15.0",

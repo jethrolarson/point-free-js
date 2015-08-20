@@ -1,6 +1,6 @@
-var {getAge} = require('./03-compose')
-var {log, map, compose, multiply, reduce, identity} = require('./lib')
-var people = require('./people')
+var {getAge} = require('../03-compose')
+var {log, map, compose, multiply, reduce, identity} = require('../../src/index')
+var people = require('../people')
 var double = multiply(2)
 var triple = multiply(3)
 

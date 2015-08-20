@@ -1,5 +1,5 @@
 //This part got too arcane and involved. Plus I needed to cut for time.
-var {log, multiply, add, set, compose, propEq, ifElse, identity} = require('../../index')
+var {log, multiply, add, set, compose, propEq, ifElse, identity} = require('../../src/index')
 var {getAges, getAge} = require('../03-compose')
 var people = require('../people')
 

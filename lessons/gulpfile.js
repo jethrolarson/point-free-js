@@ -6,7 +6,7 @@ var changed = require('gulp-changed');
 var babel = require('gulp-babel');
 var through = require('through2');
 var paths = {
-  src: ['*.js']
+  src: ['**/*.js', '../src/**/*.js', '!gulpfile.js']
 };
 
 //break gulp log so presentation isn't as noisy
@@ -33,7 +33,7 @@ gulp.task('test', function() {
     stdout: true // default = true, false means don't write stdout
   };
   gulp.src(paths.src)
-    .pipe(changed('build'))
+    .pipe(changed('../build'))
     .pipe(through.obj(function(file, enc, cb) {
       if (file.isNull()) {
         cb(null, file);
@@ -54,7 +54,7 @@ gulp.task('test', function() {
       this.push(file);
       cb();
     }))
-    .pipe(gulp.dest('build'));
+    .pipe(gulp.dest('../build'));
 });
 
 gulp.task('watch', function() {
